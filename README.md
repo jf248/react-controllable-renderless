@@ -9,7 +9,7 @@ Unlike [react-powerplug][react-powerplug] the state of these renderless componen
 
 ## Quick example
 ```jsx
-import { State, Filter } from 'react-controllable-renderless';
+import { State } from 'react-controllable-renderless';
 import { Pagination } from './components';
 
 // State works exactly like react-powerplug
