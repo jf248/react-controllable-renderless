@@ -27,7 +27,6 @@
     "react-dom": "^16.2.0"
   },
   "dependencies": {
-    "babel-eslint": "^8.2.1",
     "prop-types": "^15.6.0"
   },
   "devDependencies": {
@@ -35,7 +34,7 @@
     "@storybook/addon-links": "^3.3.3",
     "@storybook/react": "^3.3.3",
     "babel-cli": "^6.26.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-eslint": "^8.2.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-1": "^6.24.1",
     "eslint": "^4.15.0",

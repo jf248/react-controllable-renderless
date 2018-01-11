@@ -123,6 +123,12 @@ prop | type | description
 `on` | `bool` | The current state of the toggle.
 `toggle` | `function` | Function that toggles the state.
 
+## TODO
+- [ ] Tests
+- [ ] Add children prop functionality
+- [ ] Add `compose` functionality
+- [ ] Add other react-powerplug components
+
 ## Credits
 I initially learnt about the power of renderless components and the 'render prop' pattern from [downshift](downshift) as well as the 'prop getter' pattern used in `getTargetProps` prop of the `Focus` component.
 
