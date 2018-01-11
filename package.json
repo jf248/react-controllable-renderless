@@ -1,6 +1,6 @@
 {
   "name": "react-controllable-renderless",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Controllable renderless components for React. Like react-powerplug, but controllable too.",
   "main": "lib/index.js",
   "files": [
