@@ -23,7 +23,7 @@ const StateExample = props =>
   />
 
 // But we can also control parts of its state, e.g. limit, by adding props
-const ControledExample = props =>
+const ControlledExample = props =>
   <StateExample
     limit={props.limit}
     onStateChange={props.onStateChange}
