@@ -104,10 +104,10 @@ prop | type | default | description
 #### Render props
 prop | type | description
 --- | --- | ---
-`blur` | `function` | This function blurs the target.
-`focus` | `function` | This function will cause the target element to gain focus.
+`blur` | `function` | Calling this function blurs the target.
+`focus` | `function` | Calling this function focuses the target.
 `focused` | `boolean` | The current focus state of the target.
-`getTargetProps` | `function(additionalProps={})` | A function that returns the props for the target (the element we wish to focus). Takes an optional `object` argument of extra props to be merge in.<br/>Example: `<input { ...getTargetProps({onFocus: <handleFocus>}) } />`<br>See [this blog post][prop getters] on 'prop getters'.
+`getTargetProps` | `function(additionalProps={}, isNativeEl=true)` | A function that returns the props for the target (the element we wish to focus).<br/><br/>`additionalProps` are extra props to be merge in.<br/><br/>Set `isNativeEl` to `false` if the target is not the ultimate native element but an intermediary `Focus` element.<br/><br/>*Example:*<br/>`<input { ...getTargetProps({onFocus: <handleFocus>}) } />`<br/><br/>See [this blog post][prop getters] on 'prop getters'.
 
 ### Toggle
 #### Props
