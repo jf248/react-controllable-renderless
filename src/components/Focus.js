@@ -30,22 +30,30 @@ export default class Focus extends Component {
      *     Example: <input { ...getTargetProps({onFocus: <handleFocus>}) } />
      */
     render: PropTypes.func.isRequired,
+    /**
+     * An optional property to pass a ref callback to the target.
+     */
+    targetRef: PropTypes.func,
   }
 
   static defaultProps = {
     onFocus: noop,
     onBlur: noop,
+    targetRef: noop,
   }
 
   focus = () => {
-    this.focusEl.focus();
+    this.target.focus();
   }
 
   blur = () => {
-    this.focusEl.blur();
+    this.target.blur();
   }
 
-  setTargetRef = x => {this.focusEl = x;};
+  targetRef = target => {
+    this.target = target;
+    this.props.targetRef(target);
+  };
 
   renderFunc = ({ state, setState }) => {
     const { onFocus, onBlur } = this.props;
@@ -57,12 +65,15 @@ export default class Focus extends Component {
       setState( { focused: false });
       onBlur(event);
     };
-    const getTargetProps = (props={}) => ({
-      ...props,
-      ref: this.setTargetRef,
-      onFocus: composeEventHandlers( props.onFocus, handleFocus),
-      onBlur: composeEventHandlers( props.onBlur, handleBlur),
-    });
+    const getTargetProps = (props={}, isNativeEl=true) => {
+      const refType = isNativeEl ? 'ref' : 'targetRef';
+      return ({
+        ...props,
+        [refType]: this.targetRef,
+        onFocus: composeEventHandlers( props.onFocus, handleFocus),
+        onBlur: composeEventHandlers( props.onBlur, handleBlur),
+      });
+    };
 
     return this.props.render({
       getTargetProps,

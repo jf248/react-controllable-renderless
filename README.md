@@ -99,6 +99,7 @@ prop | type | default | description
 `onBlur` | `function(event: SyntheticEvent)` | `noop` | This function is called when the target is blurred.
 `onFocus` | `function(event: SyntheticEvent)` | `noop` | This function is called when the target is focused.
 `render` | `function(renderProps: object)` | **required** | The render function. See below.
+`targetRef` | `function(element)` | `noop` | An optional property to pass a ref callback to the target. Useful for chaining `Focus` components.
 
 #### Render props
 prop | type | description

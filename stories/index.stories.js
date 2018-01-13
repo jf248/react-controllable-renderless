@@ -1,28 +1,46 @@
+/* eslint react/prop-types:0 */
+
 import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-// import { linkTo } from '@storybook/addon-links';
 
 import { Filter, Focus, State, Toggle } from  '../src';
+import { composeEventHandlers } from '../src/utils';
 
-const StateExample = ({ happy, onStateChange }) =>
+import './index.css';
+
+const styles = {
+  uncontrolled: {
+    borderStyle: 'solid',
+    padding: '5px',
+    margin: '5px',
+  },
+  controlled: {
+    borderStyle: 'solid',
+    borderColor: 'red',
+    padding: '5px',
+    margin: '5px',
+  },
+};
+
+const StateExample = ({ text, onStateChange }) =>
   <State
-    happy={happy}
-    initial={{happy: false}}
+    text={text}
+    initial={{text: ''}}
     onStateChange={onStateChange}
     render={
       ({state, setState}) =>
-        <div style={{borderStyle: 'solid'}}>
-          <div>Current state is: {state.happy ? 'happy' : 'not happy'}</div>
-          <button
-            onClick={() => {setState({happy: !state.happy})}}
-          >
-            Click to change state
-          </button>
+        <div style={styles.uncontrolled}>
+          <div>Current state is: {state.text}</div>
+          <input
+            placeholder="Type away..."
+            value={state.text}
+            onChange={event => {setState({text: event.target.value});}}
+          />
         </div>
     }
-  />
+  />;
 
 
 storiesOf('State', module)
@@ -31,23 +49,24 @@ storiesOf('State', module)
   )
   .add('controlled', () =>
     <State
-      initial={{happy: true}}
+      initial={{text: ''}}
       render={
         ({state, setState}) =>
-          <div style={{borderStyle: 'solid', borderColor: 'red'}}>
-            <button
-              onClick={() => {setState({happy: !state.happy})}}
-            >
-              Click to change the controlled state
-            </button>
+          <div style={styles.controlled}>
+            <div>You can control the state from out here too</div>
+            <input
+              placeholder="Type here..."
+              value={state.text}
+              onChange={event => {setState({text: event.target.value});}}
+            />
             <StateExample
-              happy={state.happy}
+              text={state.text}
               onStateChange={changes => setState(changes)}
             />
           </div>
       }
     />
-  )
+  );
 
 const ToggleExample = ({on, onToggle}) =>
   <Toggle
@@ -56,12 +75,12 @@ const ToggleExample = ({on, onToggle}) =>
     onToggle={onToggle}
     render={
       ({ on, toggle }) =>
-        <div style={{borderStyle: 'solid'}}>
+        <div style={styles.uncontrolled}>
           <input type="checkbox" checked={on} onClick={toggle}/>
           <button onClick={toggle}>Click to toggle</button>
         </div>
     }
-  />
+  />;
 
 storiesOf('Toggle', module)
   .add('uncontrolled', () =>
@@ -72,7 +91,7 @@ storiesOf('Toggle', module)
       initial={true}
       render={
         ({ on, toggle }) =>
-          <div style={{borderStyle: 'solid', borderColor: 'red'}}>
+          <div style={styles.controlled}>
             <button onClick={toggle}>Click to control the Toggle</button>
             <ToggleExample
               on={on}
@@ -81,43 +100,37 @@ storiesOf('Toggle', module)
           </div>
       }
     />
-  )
+  );
 
-const DATA = [
-  {group: "fruits", key: 1, text: "orange"},
-  {group: "fruits", key: 2, text: "apple"},
-  {group: "vegtables", key: 3, text: "onion"},
-  {group: "vegtables", key: 5, text: "carrot"},
-  {key: 4, text:"chocolate"},
-]
+const DATA = ['orange', 'apple', 'onion', 'carrot', 'chocolate'];
 
 const filterFunc = (items, query) =>
   items.filter(
-    item => (!query || item.text.toLowerCase().includes(query.toLowerCase()))
-  )
+    item => (!query || item.toLowerCase().includes(query.toLowerCase()))
+  );
 
 
 const FilterExample = ({query, onQueryChange}) =>
-    <Filter
-      query={query}
-      onQueryChange={onQueryChange}
-      items={DATA}
-      filterFunc={filterFunc}
-      render={
-        ({filteredItems, refine, query}) =>
-          <div style={{borderStyle: 'solid'}}>
-            <input
-              type="text"
-              placeholder="Type here to filter..."
-              onChange={event => refine(event.target.value)}
-              value={query}
-            />
-            <ul>
-              {filteredItems.map(item => <li key={item.key}>{item.text}</li>)}
-            </ul>
-          </div>
-      }
-    />
+  <Filter
+    query={query}
+    onQueryChange={onQueryChange}
+    items={DATA}
+    filterFunc={filterFunc}
+    render={
+      ({filteredItems, refine, query}) =>
+        <div style={styles.uncontrolled}>
+          <input
+            type="text"
+            placeholder="Type here to filter..."
+            onChange={event => refine(event.target.value)}
+            value={query}
+          />
+          <ul>
+            {filteredItems.map(item => <li key={item}>{item}</li>)}
+          </ul>
+        </div>
+    }
+  />;
 
 storiesOf('Filter', module)
   .add('uncontrolled', () =>
@@ -128,7 +141,7 @@ storiesOf('Filter', module)
       initial={{query: ''}}
       render={
         ({ state, setState }) =>
-          <div style={{borderStyle: 'solid', borderColor: 'red'}}>
+          <div style={styles.controlled}>
             <button
               onClick={() => setState({query: 'choc'})}
             >
@@ -141,17 +154,18 @@ storiesOf('Filter', module)
           </div>
       }
     />
-  )
+  );
 
-const FocusExample = ({ targetProps: targetProps = {} }) =>
+const FocusExample = ({ targetRef, onFocus, onBlur }) =>
   <Focus
-    onFocus={action('focused')}
-    { ...targetProps }
+    targetRef={targetRef}
+    onFocus={composeEventHandlers(onFocus, action('onFocus'))}
+    onBlur={onBlur}
     render={
       ({  getTargetProps, focus, focused, }) =>
-        <div style={{borderStyle: 'solid'}}>
+        <div style={styles.uncontrolled}>
           <div>
-            You are {focused ? 'focused' : 'not focused'} on the input.
+            You are {focused ? '' : 'not'} focused on the input.
           </div>
           <div>
             <button onClick={focus}>Click to focus on the input</button>
@@ -159,7 +173,7 @@ const FocusExample = ({ targetProps: targetProps = {} }) =>
           <input { ...getTargetProps({placeholder: 'Focus on me...'}) }/>
         </div>
     }
-  />
+  />;
 
 storiesOf('Focus', module)
   .add('uncontrolled', () =>
@@ -167,18 +181,21 @@ storiesOf('Focus', module)
   )
   .add('controlled', () =>
     <Focus
-      onFocus={action('conroller onFoucs')}
+      onFocus={action('controller onFocus')}
       render={
         ({  getTargetProps, focus, focused }) =>
-          <div style={{borderStyle: 'solid', borderColor: 'red'}}>
+          <div style={styles.controlled}>
             <div>
-              You are {focused ? 'focused' : 'not focused'} on the controlled Focus element.
+              You are {focused ? '' : 'not'} focused on the controlled Focus
+              element.
             </div>
-            <button onClick={focus}>Click to focus on the contolled Focus element</button>
+            <button onClick={focus}>
+              Click to focus on the contolled Focus element
+            </button>
             <FocusExample
-              targetProps={getTargetProps({onFocus: action('controlled onFocus')})}
+              { ...getTargetProps({}, false) }
             />
           </div>
       }
     />
-  )
+  );
